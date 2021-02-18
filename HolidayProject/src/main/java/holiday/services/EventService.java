@@ -1,7 +1,6 @@
 package holiday.services;
 
 import java.text.ParseException;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -199,13 +198,11 @@ public class EventService {
 	// a dátumtartományba eső munkanapok számának meghatározása
 	public Integer howWorkDayLong(Calendar sDate, Calendar eDate) {
 
-		Boolean isWorkDay = false;
 		Integer workDayLong = 0;
 		List<EventDates> exDays = eventDateRepo.findAllByOrderByDate();
 		Calendar startDate = Calendar.getInstance();
 
 		startDate.setTime(sDate.getTime());
-
 		startDate.set(Calendar.HOUR, 0);
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
@@ -215,19 +212,23 @@ public class EventService {
 
 		for (int i = 0; i < diffDay; i++) {
 
-			isWorkDay = true;
-			if ((startDate.get(Calendar.DAY_OF_WEEK) == 7) || (startDate.get(Calendar.DAY_OF_WEEK) == 1))
-				isWorkDay = false; // ha szombat vagy vasárnap, akkor alapesetben nem munkanap
-			for (EventDates exDay : exDays) {
-				if (exDay.getDate().getTime().compareTo(startDate.getTime()) == 0)
-					isWorkDay = exDay.getIsWorkDay(); // ha szerepel a kivételnapok közt, akkor a kivételnap típusa lesz
-														// a meghatározó (munkanap, vagy sem)
-			}
-			if (isWorkDay)
+			if (isThisWorkDay(startDate, exDays))
 				workDayLong++;
 			startDate.add(Calendar.DATE, 1);
 		}
 		return workDayLong;
+	}
+
+	public Boolean isThisWorkDay(Calendar date, List<EventDates> exDays) {
+		Boolean isWorkDay = true;
+		if ((date.get(Calendar.DAY_OF_WEEK) == 7) || (date.get(Calendar.DAY_OF_WEEK) == 1))
+			isWorkDay = false; // ha szombat vagy vasárnap, akkor alapesetben nem munkanap
+		for (EventDates exDay : exDays) {
+			if (exDay.getDate().getTime().compareTo(date.getTime()) == 0)
+				isWorkDay = exDay.getIsWorkDay(); // ha szerepel a kivételnapok közt, akkor a kivételnap típusa lesz
+													// a meghatározó (munkanap, vagy sem)
+		}
+		return isWorkDay;
 	}
 
 	public List<Long> isEventAlreadyExist(Long uid, Event event) {
@@ -258,10 +259,29 @@ public class EventService {
 	}
 
 	public Map<Date, Integer> googleEventTable(Long authUserId) {
-//		- szabadságok táblába
-		List<Event> leaveEventList = getUserEvents(authUserId);
+
 		Map<Date, Integer> eventMap = new HashMap<>();
 		Calendar startDate = Calendar.getInstance();
+		List<EventDates> exDates = eventsDatesService.getAllEvents();
+
+		// hétvégék és kivételnapok a táblába
+		LocalDate now = LocalDate.now();
+		startDate.set(Calendar.YEAR, now.getYear());
+		startDate.set(Calendar.MONTH, 0);
+		startDate.set(Calendar.DAY_OF_MONTH, 0);
+		startDate.set(Calendar.HOUR, 12);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 0);
+		do {
+			if (!isThisWorkDay(startDate, exDates)) {
+				eventMap.put(startDate.getTime(), 3);
+			}
+			startDate.add(Calendar.DATE, 1);
+		} while (now.getYear() == startDate.get(Calendar.YEAR));
+
+		// szabadságok táblába
+		List<Event> leaveEventList = getUserEvents(authUserId);
 		for (Event anevent : leaveEventList) {
 			startDate.setTime(anevent.getStartDate().getTime());
 			startDate.set(Calendar.HOUR, 0);
@@ -270,26 +290,12 @@ public class EventService {
 			startDate.set(Calendar.MILLISECOND, 0);
 			Integer diffDay = (differentDate(anevent.getStartDate(), anevent.getEndDate()));
 			for (Integer i = 0; i < diffDay; i++) {
-				eventMap.put(startDate.getTime(), -7); // az adott dátumra eső szabadság (1-egész nap, 0.5 -fél nap)
+				if (isThisWorkDay(startDate, exDates)) // ha az adott szabadságnap munkanap, akkor táblába
+					eventMap.put(startDate.getTime(), -7); // az adott dátumra eső szabadság (1-egész nap, 0.5 -fél nap)
 				startDate.add(Calendar.DATE, 1);
 			}
-//				hétvégék a táblába 
-			LocalDate now = LocalDate.now();
-			startDate.set(Calendar.YEAR, now.getYear());
-			startDate.set(Calendar.MONTH, 0);
-			startDate.set(Calendar.DAY_OF_MONTH, 1);
-			do {
-				if ((startDate.get(Calendar.DAY_OF_WEEK) == 7) || (startDate.get(Calendar.DAY_OF_WEEK) == 1)) {
-					eventMap.put(startDate.getTime(), 3);
-				}
-				startDate.add(Calendar.DATE, 1);
-			} while (now.getYear() == startDate.get(Calendar.YEAR));
 		}
-		// kivételnapok táblába
-		List<EventDates> exDates = eventsDatesService.getAllEvents();
-		for (EventDates anevent : exDates) {
-			eventMap.put(anevent.getDate().getTime(), anevent.getIsWorkDay() ? 0 : 3);
-		}
+
 		return eventMap;
 	}
 
