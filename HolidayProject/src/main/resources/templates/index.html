@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/main}">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, minimum-scale=1">
+
+<meta name="description" content="">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    
+    /*<![CDATA[*/
+
+	var userLeave = [[${userLeave}]]; 
+    
+/*]]>*/
+ 
+ 
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChartd);
+
+      function drawChartd() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['típus', 'napok'],
+          ['Kivett napok',    userLeave[0]],
+          ['Maradék napok',    (userLeave[1]-userLeave[0])],
+        
+        ]);
+
+        var options = {
+          title: '',
+          backgroundColor: 'transparent' ,
+          height : 280,
+          pieHole: 0.4,
+//           is3D:true,
+          pieSliceText: 'value',
+          legendTextStyle: {fontSize:14},
+          slices: {0: {color: 'Coral'}, 1: {color: 'CornflowerBlue'}},
+          titleTextStyle : { fontSize:18}
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+
+        chart.draw(data, options);
+      }
+      
+//       ----------------calendar
+
+/*<![CDATA[*/
+
+	var holidayEvents = [[${holidayEvents}]]; 
+
+/*]]>*/
+       
+       
+       
+      google.charts.load("current", {	packages : [ "calendar" ]});
+  	google.charts.setOnLoadCallback(drawChart);
+
+  	function drawChart() {
+
+  		var dataTable = new google.visualization.DataTable();
+  		dataTable.addColumn({
+  			type : 'date',
+  			id : 'Date'
+  		});
+  		dataTable.addColumn({
+  			type : 'number',
+  			id : 'workday'
+  		});
+  		for (var i in holidayEvents){
+  			if (holidayEvents[i]!=0){
+  			dataTable.addRow([new Date(i),holidayEvents[i]]);}
+  		}
+
+  		var chart = new google.visualization.Calendar(document
+  				.getElementById('calendar_basic'));
+
+  		var options = {
+  			title : "",
+  			height : 300,
+  			legend:'none',
+  			calendar : {
+  				cellSize : 19,
+  				underMonthSpace : 10,
+  				dayOfWeekRightSpace : 10,
+  				daysOfWeek : 'SMTWTFS',
+  				cellColor : {
+  					stroke : '#76a7fa',
+  					strokeOpacity : 0.5,
+  					strokeWidth : 1,
+  				}
+  			}
+  		};
+  		 google.visualization.events.addListener(chart, 'ready', function () {
+  		    $($('#calendar_basic text')[0]).text('');
+  		    $($('#calendar_basic text')[1]).text('szabadság');
+  		    $($('#calendar_basic text')[2]).text('');
+  		    $($('#calendar_basic text')[3]).text('munkaszünet');
+  		  
+  		  });
+  		chart.draw(dataTable, options);
+  	}
+      
+      
+      
+    </script>
+
+<title>Főoldal</title>
+
+
+</head>
+
+
+<body>
+
+
+	<div layout:fragment="loginContent">
+
+		<div class="container-fluid row col-lg  justify-content-center p-0 m-0 "
+			>
+			<div
+				class=" col-lg-5  justify-content-start">
+				<b th:text="${user.name}" style="font-size: 26px; color: darkblue">név</b>
+				<br>
+				<hr style="width: 95%; text-align: center;">
+				Jogosultság: <b th:text="${user.roles}">role</b> <br> E-mail: <b
+					th:text="${user.email}">email</b> <br><br>
+				<hr style="width: 95%; text-align: center; margin-top: 0;">
+
+				<div class="row justify-content-center">
+					<div class="col-lg-6 ">
+
+						Alapszabadság:&nbsp;<b th:text="${user.baseLeave}">0 nap</b>&nbsp;nap
+						<br> Szülői szabadság:&nbsp;<b
+							th:text="${user.parentalLeave}">0 nap</b>&nbsp;nap <br>
+					</div>
+					<div class="col-lg-6 ">
+
+						Áthozott szabadság:&nbsp;<b th:text="${user.carriedLeave}">0
+							nap</b>&nbsp;nap <br> Egyéb szabadság:&nbsp;<b
+							th:text="${user.otherLeave}">0 nap</b>&nbsp;nap<br>
+					</div>
+				</div>
+				<hr style="width: 95%; text-align: center;">
+				Jóváhagyó:&nbsp;<b th:text="${approverName}">nincs</b> <br>
+
+			</div>
+<!-- 			class=" col-lg-4 border border-primary rounded shadow  bg-white rounded justify-content-center" -->
+			<div th:object="${userLeave}"
+				class=" col-lg-4 justify-content-center">
+				<!-- 				style=" height: 300px; margin: auto;"> -->
+
+				<div id="donutchart" style="width: 550px; height: 290px; "></div>
+
+
+
+			</div>
+<!-- 			class="col-lg-10 border border-primary rounded shadow  bg-white mt-3 rounded justify-content-center" -->
+			<div th:object="${holidayEvents}"
+				class="col-lg-10 justify-content-center">
+
+				<div id="calendar_basic" class="  mt-3 self-align-center"
+					style="width: 1200px; height: 230px; margin: auto;"></div>
+
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>
