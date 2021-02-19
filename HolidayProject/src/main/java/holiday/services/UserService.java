@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<User> getAllUser() {
-		return userRepo.findAll();
+		return userRepo.findAllByOrderByName();
 
 	}
 

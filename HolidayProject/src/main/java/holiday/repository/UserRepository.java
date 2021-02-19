@@ -18,7 +18,7 @@ import holiday.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	
-	List<User> findAll();
+	List<User> findAllByOrderByName();
 	
 	User findFirstByNameIgnoreCase(String name);
 	

@@ -1,12 +1,12 @@
 package holiday.controller;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import holiday.entity.AppPojoList;
-import holiday.entity.ApprovePojo;
 import holiday.entity.Event;
 import holiday.entity.EventDates;
 import holiday.entity.User;
@@ -186,21 +185,42 @@ public class EventController {
 //		myApPojoList.getList().forEach(s-> System.out.println(s)); 
 
 		model.addAttribute("myApproveList", myApPojoList);
-		model.addAttribute("resultMyApproveList", new AppPojoList() );
+		model.addAttribute("resultMyApproveList", new AppPojoList());
 
 		return "approvingPage";
 	}
 
 	@PostMapping("/saveapproved")
 	public String saveApproved(@ModelAttribute AppPojoList myApproveList) {
-		myApproveList.getList().forEach(s-> {
+		myApproveList.getList().forEach(s -> {
 			Event updateEvent = eventService.findByUserIdByEventId(s.getUserId(), s.getEventId());
 			updateEvent.setApproved((s.getApproved()));
-			Event e=new Event();
+			Event e = new Event();
 			eventService.saveEvent(e);
-		}); 
-		
+		});
+
 		return "redirect:/approvingPage";
+	}
+
+	@GetMapping("/userstable")
+	public String usersTable(Model model) {
+
+		List<Integer> lengthOfMonthList = new ArrayList<>();
+		List<User> users = userService.getAllUser();
+		model.addAttribute("users", users);
+
+		for (int i = 1; i < 13; i++) { // hónapok hossza 
+			LocalDate month = LocalDate.of(LocalDate.now().getYear(), i, 1);
+			int length = month.lengthOfMonth();
+			lengthOfMonthList.add(length);
+		}
+		model.addAttribute("lengthOfMonthList", lengthOfMonthList);
+		
+		Map<Long, Map<Date, Integer>> eventMap = new HashMap<>();  // a userek szabadságai 
+		users.forEach( user -> eventMap.put(user.getId(), eventService.googleEventTable(user.getId())));
+		model.addAttribute("usersEvents", eventMap);
+		
+		return "userstable";
 	}
 
 }
