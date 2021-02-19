@@ -94,10 +94,10 @@
 							<tr class="justify-content-center">
 
 								
-								<th><a  type="button" class="nav-link" id="namew" th:name="namew" th:href="@{/orderBy(orderBy='name', currentPage=${currentPage})}">Név</a></th>
-								<th><a  type="button" class="nav-link" id="emailw" th:name="emailw" th:href="@{/orderBy(orderBy='email', currentPage=${currentPage})}">E-mail</a></th>
+								<th><a  type="button" class="nav-link" id="namew" th:name="namew" th:href="@{/orderBy(orderBy='name', currentPage=${currentPage})}">Név &nabla; </a></th>
+								<th><a  type="button" class="nav-link" id="emailw" th:name="emailw" th:href="@{/orderBy(orderBy='email', currentPage=${currentPage})}">E-mail &nabla;</a></th>
 								<th><a  type="button" class="nav-link" id="rolew" th:name="rolew" href="#">Jogosultság</a></th>
-								<th><a  type="button" class="nav-link" id="statusw" th:name="statusw" th:href="@{/orderBy(orderBy='status', currentPage= ${currentPage})}">Státusz</a></th>
+								<th><a  type="button" class="nav-link" id="statusw" th:name="statusw" th:href="@{/orderBy(orderBy='status', currentPage= ${currentPage})}">Státusz &nabla;</a></th>
 								
 								<th><a sec:authorize="hasAuthority('ADMIN')" type="button" href="/registration" class="btn btn-success self-align-right">Új felhasználó</a></th>
 								<th><a type="button" class="btn btn-secondary self-align-right " th:href="@{/}">
