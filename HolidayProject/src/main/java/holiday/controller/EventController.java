@@ -1,7 +1,6 @@
 package holiday.controller;
 
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,7 +58,7 @@ public class EventController {
 
 	@RequestMapping("/holidayEventCalendar")
 	public String holidayEventCalendar(Model model, @RequestParam(defaultValue = "0") int page) {
-		Page<EventDates> partHolidayEventList = eventsDatesService.getAllEvents(PageRequest.of(page, 4));
+		Page<EventDates> partHolidayEventList = eventsDatesService.getAllEvents(PageRequest.of(page, 5));
 		List<EventDates> fullHolidayEventList = eventsDatesService.getAllEvents();
 		Map<Date, Integer> holidayEventMap = new HashMap<>();
 		for (EventDates anevent : fullHolidayEventList) {
@@ -93,7 +92,7 @@ public class EventController {
 		User authUser = userService.findByEmail(authentication.getName());
 		Long authUserId = authUser.getId();
 
-		Page<Event> events = eventService.findAllByUserIdOrderByStartDate(authUserId, PageRequest.of(page, 4));
+		Page<Event> events = eventService.findAllByUserIdOrderByStartDate(authUserId, PageRequest.of(page, 5));
 
 		model.addAttribute("holidayEvents", eventService.googleEventTable(authUserId));
 		model.addAttribute("events", events);
@@ -209,17 +208,20 @@ public class EventController {
 		List<User> users = userService.getAllUser();
 		model.addAttribute("users", users);
 
-		for (int i = 1; i < 13; i++) { // hónapok hossza 
+		for (int i = 1; i < 13; i++) { // hónapok hossza
 			LocalDate month = LocalDate.of(LocalDate.now().getYear(), i, 1);
 			int length = month.lengthOfMonth();
 			lengthOfMonthList.add(length);
 		}
 		model.addAttribute("lengthOfMonthList", lengthOfMonthList);
-		
-		Map<Long, Map<Date, Integer>> eventMap = new HashMap<>();  // a userek szabadságai 
-		users.forEach( user -> eventMap.put(user.getId(), eventService.googleEventTable(user.getId())));
+
+		Map<Long, Map<Date, Integer>> eventMap = new HashMap<>(); // a userek szabadságai
+		users.forEach(user -> eventMap.put(user.getId(), eventService.googleEventTable(user.getId())));
 		model.addAttribute("usersEvents", eventMap);
-		
+
+		Integer thisYear = LocalDate.now().getYear();
+		model.addAttribute("thisYear", thisYear);
+
 		return "userstable";
 	}
 

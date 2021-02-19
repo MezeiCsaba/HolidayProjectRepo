@@ -44,26 +44,41 @@
 					<thead>
 						<tr class="justify-content-center"
 							style="width: 16px; background-color: lightblue">
-							<th class="p-0" style="width: 16px"
-								th:text="${#dates.monthName(#dates.create(2021,(month),1))}"></th>
+							<th rowspan="2"   style="width: 16px; padding: 10px 0"
+								th:text="${#dates.monthName(#dates.create((thisYear),(month),1))}"></th>
 							<th:block
 								th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
-								<th style="width: 16px" class="p-0" th:text="${day}">n</th>
+								<th style="width: 16px" class="p-0"><b th:text="${day}"></b></th>
+							</th:block>
+						</tr>
+						<tr class="justify-content-center"
+							style="width: 16px; background-color: lightblue">
+							<th:block
+								th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
+								<th style="width: 16px" class="p-0" th:switch="${#dates.dayOfWeek(#dates.create((thisYear),(month),(day)))}">
+								<span th:case="1">V</span>
+								<span th:case="2">H</span>
+								<span th:case="3">K</span>
+								<span th:case="4">Sz</span>
+								<span th:case="5">Cs</span>
+								<span th:case="6">P</span>
+								<span th:case="7">Sz</span>
+								</th>
 							</th:block>
 						</tr>
 					</thead>
 					<tbody>
-						<th:block th:each="user, stat: ${users}">
+						<th:block th:each="user : ${users}">
 							<tr>
 								<td class="p-0" th:text="${user.name}"></td>
 								<th:block
 									th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
 									<th:block
-										th:switch="${usersEvents[user.id].get(#dates.create(2021,(month),(day)))}">
+										th:switch="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}">
 										<td th:case="3" class="p-0"
 											style="width: 16px; background-color: lightgrey"></td>
 										<td th:case="-7" class="p-0"
-											style="width: 16px; background-color: green"></td>
+											style="width: 16px; background-color: lightgreen"></td>
 										<td th:case="*" class="p-0"
 											style="width: 16px; background-color: white"></td>
 									</th:block>
