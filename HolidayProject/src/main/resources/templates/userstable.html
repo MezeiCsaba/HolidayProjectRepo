@@ -34,66 +34,88 @@
 
 </head>
 
-<body>
+<body style=" max-width: 100%; overflow-x: hidden; ">
 
 	<div layout:fragment="loginContent">
-		<div class="container col-lg-11 mt-1">
 
-			<th:block th:each="month: ${#numbers.sequence(1, 12)}">
-				<table class="table table-bordered table-striped text-center m-6 ">
-					<thead>
-						<tr class="justify-content-center"
-							style="width: 16px; background-color: lightblue">
-							<th rowspan="2"   style="width: 16px; padding: 10px 0"
-								th:text="${#dates.monthName(#dates.create((thisYear),(month),1))}"></th>
-							<th:block
-								th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
-								<th style="width: 16px" class="p-0"><b th:text="${day}"></b></th>
-							</th:block>
-						</tr>
-						<tr class="justify-content-center"
-							style="width: 16px; background-color: lightblue">
-							<th:block
-								th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
-								<th style="width: 16px" class="p-0" th:switch="${#dates.dayOfWeek(#dates.create((thisYear),(month),(day)))}">
-								<span th:case="1">V</span>
-								<span th:case="2">H</span>
-								<span th:case="3">K</span>
-								<span th:case="4">Sz</span>
-								<span th:case="5">Cs</span>
-								<span th:case="6">P</span>
-								<span th:case="7">Sz</span>
-								</th>
-							</th:block>
-						</tr>
-					</thead>
-					<tbody>
-						<th:block th:each="user : ${users}">
-							<tr>
-								<td class="p-0" th:text="${user.name}"></td>
+		<div class="row container-fluid"
+			style="margin: auto; max-width: 100%; max-height: 95%">
+			<div class="col col-lg-2  p-2 m-0 border border-2  border-primary rounded-start" >
+				<div style="text-align: center">
+					<b class="mt-4" style="font-size: 24px">Riportok</b>
+				</div>
+
+				<div style="height: 85%" class=" my-2 p-2 border">
+				<input type="checkbox" checked><span class="px-1"> Összes felhasználó </span>
+				
+				
+				
+				
+				
+				</div>
+				
+				<div style=" margin:auto; text-align: center">
+					<button class="btn btn-warning my-2">Save as PDF</button>
+				</div>
+			</div>
+
+			<div
+				class="col col-lg ms-1 p-2 border border-2 border-primary rounded-end "
+				style="height: 85vh; overflow-y: auto; ">
+
+				<th:block th:each="month: ${#numbers.sequence(1, 12)}">
+					<table class="table table-bordered table-striped text-center p-2 ">
+						<thead>
+							<tr class="justify-content-center"
+								style="width: 16px; background-color: lightblue">
+								<th rowspan="2" style="width: 16px; padding: 10px 0"
+									th:text="${#dates.monthName(#dates.create((thisYear),(month),1))}"></th>
 								<th:block
 									th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
-									
-<!-- 									<td class="p-0" th:text="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}"></td> -->
-									
-									
-									<th:block
-										th:switch="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}">
-										<td th:case="3" class="p-0" 
-											style="width: 16px; background-color: lightgrey"></td>
-										<td th:case="-7" class="p-0" 
-											style="width: 16px; background-color: lightgreen"></td>
-										<td th:case="*" class="p-0" 
-											style="width: 16px; background-color: white"></td>
-									</th:block>
+									<th style="width: 16px" class="p-0"><b th:text="${day}"></b></th>
 								</th:block>
 							</tr>
-						</th:block>
-					</tbody>
-				</table>
-			</th:block>
+							<tr class="justify-content-center"
+								style="width: 16px; background-color: lightblue">
+								<th:block
+									th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
+									<th style="width: 16px" class="p-0"
+										th:switch="${#dates.dayOfWeek(#dates.create((thisYear),(month),(day)))}">
+										<span th:case="1">V</span> <span th:case="2">H</span> <span
+										th:case="3">K</span> <span th:case="4">Sz</span> <span
+										th:case="5">Cs</span> <span th:case="6">P</span> <span
+										th:case="7">Sz</span>
+									</th>
+								</th:block>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="user : ${users}">
+								<tr>
+									<td class="p-0"> <span style="float: left; padding: 0 4px ;" th:text="${user.name}"></span></td>
+									<th:block
+										th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
+
+										<!-- 									<td class="p-0" th:text="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}"></td> -->
+
+
+										<th:block
+											th:switch="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}">
+											<td th:case="3" class="p-0"
+												style="width: 16px; background-color: lightgrey"></td>
+											<td th:case="-7" class="p-0"
+												style="width: 16px; background-color: lightgreen"></td>
+											<td th:case="*" class="p-0"
+												style="width: 16px; background-color: white"></td>
+										</th:block>
+									</th:block>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</th:block>
+			</div>
 		</div>
-		<br>
 	</div>
 </body>
 
