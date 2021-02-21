@@ -73,13 +73,17 @@
 								<td class="p-0" th:text="${user.name}"></td>
 								<th:block
 									th:each="day: ${#numbers.sequence(1, (lengthOfMonthList[month-1]))}">
+									
+<!-- 									<td class="p-0" th:text="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}"></td> -->
+									
+									
 									<th:block
 										th:switch="${usersEvents[user.id].get(#dates.create((thisYear),(month),(day)))}">
-										<td th:case="3" class="p-0"
+										<td th:case="3" class="p-0" 
 											style="width: 16px; background-color: lightgrey"></td>
-										<td th:case="-7" class="p-0"
+										<td th:case="-7" class="p-0" 
 											style="width: 16px; background-color: lightgreen"></td>
-										<td th:case="*" class="p-0"
+										<td th:case="*" class="p-0" 
 											style="width: 16px; background-color: white"></td>
 									</th:block>
 								</th:block>

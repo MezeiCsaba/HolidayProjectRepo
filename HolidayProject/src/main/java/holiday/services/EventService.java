@@ -220,13 +220,13 @@ public class EventService {
 	}
 
 	public Boolean isThisWorkDay(Calendar date, List<EventDates> exDays) {
+		
 		Boolean isWorkDay = true;
 		if ((date.get(Calendar.DAY_OF_WEEK) == 7) || (date.get(Calendar.DAY_OF_WEEK) == 1))
 			isWorkDay = false; // ha szombat vagy vasárnap, akkor alapesetben nem munkanap
 		for (EventDates exDay : exDays) {
 			if (exDay.getDate().getTime().compareTo(date.getTime()) == 0)
 				isWorkDay = exDay.getIsWorkDay(); // ha szerepel a kivételnapok közt, akkor a kivételnap típusa lesz
-													// a meghatározó (munkanap, vagy sem)
 		}
 		return isWorkDay;
 	}
@@ -269,7 +269,7 @@ public class EventService {
 		startDate.set(Calendar.YEAR, now.getYear());
 		startDate.set(Calendar.MONTH, 0);
 		startDate.set(Calendar.DAY_OF_MONTH, 0);
-		startDate.set(Calendar.HOUR, 12);
+		startDate.set(Calendar.HOUR, 0);
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
 		startDate.set(Calendar.MILLISECOND, 0);
