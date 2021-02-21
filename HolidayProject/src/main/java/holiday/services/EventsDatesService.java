@@ -47,8 +47,8 @@ public class EventsDatesService {
 		Long ids = -1L;
 		List<EventDates> events = getAllEvents();
 		for (EventDates anevent: events) {
-			anevent.getDate().set(Calendar.HOUR, 0);
-			event.getDate().set(Calendar.HOUR, 0);
+			anevent.getDate().set(Calendar.HOUR_OF_DAY, 0);
+			event.getDate().set(Calendar.HOUR_OF_DAY, 0);
 			if(event.getDate().getTime().compareTo(anevent.getDate().getTime())==0) {
 				ids=anevent.getId();
 				return ids;

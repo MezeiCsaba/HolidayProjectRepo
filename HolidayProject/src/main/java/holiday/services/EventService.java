@@ -114,7 +114,7 @@ public class EventService {
 
 		event.setUser(user);
 
-		event.getStartDate().set(Calendar.HOUR, 0);
+		event.getStartDate().set(Calendar.HOUR_OF_DAY, 0);
 		event.getStartDate().set(Calendar.MINUTE, 0);
 		event.getStartDate().set(Calendar.SECOND, 0);
 		event.getStartDate().set(Calendar.MILLISECOND, 0);
@@ -203,7 +203,7 @@ public class EventService {
 		Calendar startDate = Calendar.getInstance();
 
 		startDate.setTime(sDate.getTime());
-		startDate.set(Calendar.HOUR, 0);
+		startDate.set(Calendar.HOUR_OF_DAY, 0);	
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
 		startDate.set(Calendar.MILLISECOND, 0);
@@ -225,6 +225,8 @@ public class EventService {
 		if ((date.get(Calendar.DAY_OF_WEEK) == 7) || (date.get(Calendar.DAY_OF_WEEK) == 1))
 			isWorkDay = false; // ha szombat vagy vasárnap, akkor alapesetben nem munkanap
 		for (EventDates exDay : exDays) {
+			exDay.getDate().set(Calendar.HOUR_OF_DAY,0);
+			date.set(Calendar.HOUR_OF_DAY,0);
 			if (exDay.getDate().getTime().compareTo(date.getTime()) == 0)
 				isWorkDay = exDay.getIsWorkDay(); // ha szerepel a kivételnapok közt, akkor a kivételnap típusa lesz
 		}
@@ -255,8 +257,12 @@ public class EventService {
 	}
 
 	public Integer differentDate(Calendar date1, Calendar date2) {
+		date1.set(Calendar.HOUR_OF_DAY,0);
+		date2.set(Calendar.HOUR_OF_DAY,0);
 		return (int) ((date2.getTimeInMillis() - date1.getTimeInMillis()) / 1000 / 60 / 60 / 24) + 1;
 	}
+	
+	
 
 	public Map<Date, Integer> googleEventTable(Long authUserId) {
 
@@ -269,7 +275,7 @@ public class EventService {
 		startDate.set(Calendar.YEAR, now.getYear());
 		startDate.set(Calendar.MONTH, 0);
 		startDate.set(Calendar.DAY_OF_MONTH, 0);
-		startDate.set(Calendar.HOUR, 0);
+		startDate.set(Calendar.HOUR_OF_DAY,0);
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
 		startDate.set(Calendar.MILLISECOND, 0);
@@ -284,7 +290,7 @@ public class EventService {
 		List<Event> leaveEventList = getUserEvents(authUserId);
 		for (Event anevent : leaveEventList) {
 			startDate.setTime(anevent.getStartDate().getTime());
-			startDate.set(Calendar.HOUR, 0);
+			startDate.set(Calendar.HOUR_OF_DAY, 0);
 			startDate.set(Calendar.MINUTE, 0);
 			startDate.set(Calendar.SECOND, 0);
 			startDate.set(Calendar.MILLISECOND, 0);
