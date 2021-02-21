@@ -261,8 +261,6 @@ public class EventService {
 		date2.set(Calendar.HOUR_OF_DAY,0);
 		return (int) ((date2.getTimeInMillis() - date1.getTimeInMillis()) / 1000 / 60 / 60 / 24) + 1;
 	}
-	
-	
 
 	public Map<Date, Integer> googleEventTable(Long authUserId) {
 
