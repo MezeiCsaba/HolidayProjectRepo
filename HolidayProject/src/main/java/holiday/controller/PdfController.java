@@ -29,8 +29,6 @@ public class PdfController {
 	}
 
 
-
-
 	@GetMapping("/downloadpdf")
 	    public void downloadPDFResource(HttpServletResponse response) {
 	        try {

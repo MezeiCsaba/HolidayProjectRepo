@@ -24,7 +24,6 @@ import holiday.entity.User;
 @Service
 public class PdfService {
 
-	private static final String PDF_RESOURCES = "/pdf-resources/";
 	private SpringTemplateEngine templateEngine;
 	private UserService userService;
 	private EventService eventService;
@@ -44,7 +43,7 @@ public class PdfService {
 	public void setTemplateEngine(SpringTemplateEngine templateEngine) {
 		this.templateEngine = templateEngine;
 	}
-
+	@Autowired
 	public PdfService() {
 
 	}

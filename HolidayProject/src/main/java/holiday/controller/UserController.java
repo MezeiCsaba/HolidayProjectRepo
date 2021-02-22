@@ -98,11 +98,15 @@ public class UserController {
 
 			User authUser = userService.findByEmail(authentication.getName());
 			User originalUser = userService.findById(user.getId());
+			Boolean chgEmail = false;
 
 			if (user.getName() == null || user.getName().isEmpty())
 				user.setName(originalUser.getName());
-			if (user.getEmail() == null || user.getEmail().isEmpty())
+			if (user.getEmail() == null || user.getEmail().isEmpty()) {
 				user.setEmail(originalUser.getEmail());
+				
+			} else chgEmail=!user.getEmail().equals(originalUser.getEmail());  // ha a régi és az új email cím nem egyezik, akkor változott (chgEmail=true)
+			
 			if (user.getPassword() == null || user.getPassword().isEmpty())
 				user.setPassword(originalUser.getPassword());
 			if (user.getRoles() == null || user.getRoles().isEmpty())
@@ -120,7 +124,7 @@ public class UserController {
 			user.setActivationCode(originalUser.getActivationCode());
 
 			if (roleService.userRoleisExist(authUser.getId(), "ADMIN")) {
-				userService.updateUserAsAdmin(user);
+				userService.updateUserAsAdmin(user, chgEmail);
 			} else {
 				userService.updateUserAsHR(user);
 			}

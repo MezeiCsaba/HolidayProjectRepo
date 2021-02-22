@@ -124,22 +124,32 @@ public class UserService implements UserDetailsService {
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
-		if (user.getId() == null || user.getId() < 0) { // újonnan regisztrált, aktiválásra váró user
-			user.setActivationCode(generateActivationCode());
-			activationLink = activationLink + "activation/" + user.getActivationCode();
-			log.debug("sikeres regisztráció: " + user.getEmail());
-			emailExecutor.execute(new EmailService(user,
-					"Regisztrációs értesítés a Holiday szabadságnyilvántartó rendszerhez",
-					" Sikeresen regisztráltak a(z) " + user.getEmail()
-							+ " e-mail címmel a Holiday szabadságnyilvántartó rendszerbe. \n\n A regisztráció aktiválásához látogass el a következő linkre: "
-							+ activationLink,
-					javaMailSender));
-		} else user.setActivationCode("");
+		if (user.getId() == null || user.getId() < 0 ) { // újonnan regisztrált , aktiválásra váró user
+			sendActivationEmail(user);
+			user.setStatus(false);
+		} else {
+			user.setActivationCode("");
+			user.setStatus(true);
+			}
+		
 		checkRoles(user);
 		User u = userRepo.save(user);
 	}
+	
+	private void sendActivationEmail(User user) {
+		user.setActivationCode(generateActivationCode());
+		String newActivationLink = activationLink + "activation/" + user.getActivationCode();
+		emailExecutor.execute(new EmailService(user,
+				"Regisztrációs értesítés a Holiday szabadságnyilvántartó rendszerhez",
+				" Sikeresen regisztráltak a(z) " + user.getEmail()
+						+ " e-mail címmel a Holiday szabadságnyilvántartó rendszerbe. \n\n A regisztráció aktiválásához látogass el a következő linkre: "
+						+ newActivationLink,
+				javaMailSender));
+		user.setStatus(false);  // akinek regisztrációs e-mail megy, azt inaktívra állítjuk a regisztráció aktiválásáig
+		log.debug("Email kiküldve: " + user.getEmail());
+	}
 
-	public String generateActivationCode() {
+	private String generateActivationCode() {
 		Random random = new Random();
 		char[] code = new char[16];
 		for (int i = 0; i < code.length; i++)
@@ -147,10 +157,12 @@ public class UserService implements UserDetailsService {
 		String key = new String(code);
 		return new String(key);
 	}
+	
 
-	public void updateUserAsAdmin(User updateUser) {
+	public void updateUserAsAdmin(User updateUser, Boolean chgEmail) {
 
 		String updatePassword = null;
+		Boolean sendedEmail = false;
 
 		CharSequence thisPassword = updateUser.getPassword(); // password a form-ról (registration)
 		String dbPassword = userRepo.findFirstById(updateUser.getId()).getPassword(); // password a DB-ből
@@ -160,11 +172,15 @@ public class UserService implements UserDetailsService {
 			updatePassword = dbPassword;
 		} else {
 			updatePassword = (passwordEncoder.encode(thisPassword)); // az új jelszó
-
+			sendActivationEmail(updateUser);
+			sendedEmail=true;
 		}
 		updateUser.setPassword(updatePassword);
 		checkRoles(updateUser);
-
+		if (chgEmail && !sendedEmail) {	// új e-mail címet adtak meg, új aktivációs email-t küldünk, újbóli aktiválásig inaktív (ha közben a jelszó is vátozott, akkor itt már nem küldünk emailt
+			sendActivationEmail(updateUser);
+		}
+		
 		User u = userRepo.save(updateUser);
 
 //		userRepo.updateUserAsAdmin(updateUser.getName(), updateUser.getEmail(), updatePassword, updateUser.getRoles(),
@@ -178,13 +194,11 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public Long isCodeValid(String code) {
+	public Long isCodeValid(String code) {   // aktivációs kód ellenőrzése
 
 		User repUser = userRepo.findFirstByActivationCode(code);
 		if (repUser == null)
 			return -1L;
-		repUser.setStatus(true);
-		userRepo.save(repUser);
 
 		return repUser.getId();
 	}
