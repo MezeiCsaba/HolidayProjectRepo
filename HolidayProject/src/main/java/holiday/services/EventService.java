@@ -47,6 +47,9 @@ public class EventService {
 	private EventsDateRepository eventDateRepo;
 	private ExecutorService emailExecutor = Executors.newFixedThreadPool(10);
 	private JavaMailSender javaMailSender;
+	
+	
+	
 
 	@Autowired
 	public void setJavaMailSender(JavaMailSender javaMailSender) {

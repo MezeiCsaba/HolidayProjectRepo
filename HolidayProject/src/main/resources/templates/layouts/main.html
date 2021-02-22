@@ -70,27 +70,21 @@ body {
 
 				<div class="row navbar-collapse justify-content-end mx-3"
 					id="mainNavBar">
-					<ul class="navbar-nav  justify-content-end col-lg" >
+					<ul class="navbar-nav justify-content-end col-lg" >
 						<li sec:authorize="hasAuthority('ADMIN')"
-							class="nav-item dropdown  col-lg-3 align-self-end "><a
+							class="nav-item dropdown  col-lg align-self-end "><a
 							class=" nav-link dropdown-toggle" href="#" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="true"> <span
 								class="nav-label" style="color: white">Admin</span>
 						</a>
-
 							<ul class="dropdown-menu">
-
 								<li><a class="text-black dropdown-item"
 									href="/userhandling">Felhasználók kezelése</a></li>
-
 								<li><a class="text-black dropdown-item"
 									href="#">Rendszer beállítások</a></li>
-
 							</ul></li>
-
-
 						<li sec:authorize="hasAuthority('USER')"
-							class="nav-item dropdown   col-lg-3 align-self-end"><a
+							class="nav-item dropdown   col-lg align-self-end"><a
 							class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="true"> <span
 								class="nav-label" style="color: white">Személyes menü</span>
@@ -108,7 +102,7 @@ body {
 
 
 						<li sec:authorize="hasAuthority( 'HR')"
-							class="nav-item dropdown  col-lg-3 align-self-end"><a
+							class="nav-item dropdown  col-lg align-self-end"><a
 							class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="true"> <span
 								class="nav-label" style="color: white">HR menü</span>
