@@ -52,27 +52,30 @@ body {
 </head>
 <body>
 
-	<div class="containert-fluid col-lg px-0 row">
+	<div class="container-fluid m-0 p-0">
 		<nav
-			class="navbar navbar-dropdown navbar-sticky-top navbar-expand-lg navbar-dark"
+			class="navbar navbar-dropdown fixed-top navbar-expand-lg navbar-dark mx-0 "
 			style="background-color: rgb(57, 171, 255)">
 
-			<div class="container-fluid col-lg-12 px-1">
+			<div class="row col-lg px-5 m-0">
 
-				<div class="row  justify-content-start col-lg-3 me-3">
-					<a class="navbar-brand col mx-1" href="/"> <img
+				<div class="row  col-lg-3 me-3">
+					<a class="navbar-brand" href="/"> <img
 						src="/pics/sun2-icon77x77.png" width="40" height="40"
-						class="d-inline-block align-center" alt=""> <span
+						class="d-inline-block " alt=""> <span
 						class="align-self-left "> &nbsp;Monoton üget a süppedő
 							homokon ... </span>
 					</a>
 				</div>
 
-				<div class="row navbar-collapse justify-content-end mx-3"
+
+				<div
+					class="row navbar-collapse col-lg d-flex justify-content-end p-0 m-0 d-flex justify-content-center"
 					id="mainNavBar">
-					<ul class="navbar-nav justify-content-end col-lg" >
+					<ul
+						class="row navbar-nav d-flex justify-content-end col-lg p-0 m-0">
 						<li sec:authorize="hasAuthority('ADMIN')"
-							class="nav-item dropdown  col-lg align-self-end "><a
+							class="col-lg-2 nav-item dropdown mx-3 d-flex justify-content-center"><a
 							class=" nav-link dropdown-toggle" href="#" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="true"> <span
 								class="nav-label" style="color: white">Admin</span>
@@ -80,29 +83,28 @@ body {
 							<ul class="dropdown-menu">
 								<li><a class="text-black dropdown-item"
 									href="/userhandling">Felhasználók kezelése</a></li>
-								<li><a class="text-black dropdown-item"
-									href="#">Rendszer beállítások</a></li>
+								<li><a class="text-black dropdown-item" href="#">Rendszer
+										beállítások</a></li>
 							</ul></li>
 						<li sec:authorize="hasAuthority('USER')"
-							class="nav-item dropdown   col-lg align-self-end"><a
-							class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
-							role="button" aria-haspopup="true" aria-expanded="true"> <span
-								class="nav-label" style="color: white">Személyes menü</span>
+							class="col-lg-2 nav-item dropdown mx-3 d-flex  justify-content-center">
+							<a class="nav-link  dropdown-toggle" href="#"
+							data-toggle="dropdown" role="button" aria-haspopup="true"
+							aria-expanded="true"> <span class="nav-label"
+								style="color: white">Személyes menü</span>
 						</a>
 
 							<ul class="dropdown-menu">
-								<li><a class="text-black dropdown-item"
-									href="/new_userevent">Szabadságok kezelése</a></li>
+								<li><a class="text-black dropdown-item" href="/new_userevent">Szabadságok
+										kezelése</a></li>
 								<li sec:authorize="hasAuthority('APPROVER')"><a
 									class="text-black dropdown-item" href="/approvingPage">Jóváhagyások</a></li>
-								<li><a
-									class="text-black dropdown-item" href="/changepassword">Jelszó csere</a></li>
-
-							</ul></li>
-
-
+								<li><a class="text-black dropdown-item"
+									href="/changepassword">Jelszó csere</a></li>
+							</ul>
+						</li>
 						<li sec:authorize="hasAuthority( 'HR')"
-							class="nav-item dropdown  col-lg align-self-end"><a
+							class="col-lg-2 nav-item dropdown mx-3 d-flex justify-content-center"><a
 							class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="true"> <span
 								class="nav-label" style="color: white">HR menü</span>
@@ -117,20 +119,23 @@ body {
 								<li><a class="text-black dropdown-item" href="/userstable">Riportok
 										készítése</a></li>
 							</ul></li>
-						<li class="col-lg-3">
+						<li class="d-flex justify-content-end col-lg-2 m-1 p-1">
 							<form sec:authorize="isAuthenticated()" id="frmlogout"
 								th:action="@{/logout}" method="post">
 								<a href="javascript:{}"
 									onclick="document.getElementById('frmlogout').submit(); return false;"
-									class="btn btn-outline-light ms-2"><b >Kijelentkezés</b></a>
+									class="btn btn-outline-light ms-2"><b>Kijelentkezés</b></a>
 							</form>
 						</li>
 					</ul>
 				</div>
+
+
+
+
 			</div>
 		</nav>
 	</div>
-	<br>
 
 
 	<div layout:fragment="loginContent"></div>

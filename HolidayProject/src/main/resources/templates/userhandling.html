@@ -41,6 +41,10 @@
 <body>
 
 	<div layout:fragment="loginContent">
+<br>
+		<br>
+		<br>
+		<br>
 		<div class="container col-lg-11 mt-1">
 			<th:block th:if="${newUserError!=null}">
 				<div class="modal" tabindex="-1" role="dialog" id="userReg">
@@ -71,12 +75,12 @@
 			</th:block>
 
 
-			<div class="container col-lg-6  justify-content-center">
+			<div class="container col-lg-6 ">
 
 				<form name="search" th:action="@{/search}" method="POST"
 					class="form-inline">
-					<div class="input-group mb-3">
-						<input type="search" class="form-control" aria-label="serachtext"
+					<div class="input-group mb-3 ">
+						<input type="search" class="form-control " aria-label="serachtext"
 							placeholder="felhasználónév" id="serachtext" name="searchtext">
 						<div class="input-group-prepend ">
 							<button type="submit" style="background-color: yellow"
